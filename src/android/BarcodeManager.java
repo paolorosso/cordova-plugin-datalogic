@@ -50,8 +50,10 @@ public class BarcodeManager extends CordovaPlugin {
 
         }
         else if(action.equals("startDecode")){
+            int err = decoder.startDecode();
 
-            decoder.startDecode();
+            context.success(err);
+
             return true;
 
         } else {
