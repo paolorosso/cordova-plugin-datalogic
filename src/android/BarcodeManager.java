@@ -42,6 +42,17 @@ public class BarcodeManager extends CordovaPlugin {
             //     callbackContext.sendPluginResult(result);    
             // }
             return true;
+        }
+        else if(action.equals("addStartListener")){
+
+            callbackContext = context;
+            return true;
+
+        }
+        else if(action.equals("startDecode")){
+
+            decoder.startDecode();
+            return true;
 
         } else {
             
