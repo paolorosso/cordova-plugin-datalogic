@@ -12,6 +12,7 @@ import com.datalogic.decode.DecodeResult;
 import com.datalogic.decode.ReadListener;
 import com.datalogic.device.ErrorManager;
 import com.datalogic.decode.BarcodeID;
+import com.datalogic.decode.StartListener;
 
 import android.util.Log;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ public class BarcodeManager extends CordovaPlugin {
     private final String LOGTAG = getClass().getName();
     com.datalogic.decode.BarcodeManager decoder = null;
     ReadListener listener = null;
+    //StartListener scanListener = null;
     CallbackContext callbackContext = null;
     boolean multiTasking=true;
 
@@ -43,19 +45,25 @@ public class BarcodeManager extends CordovaPlugin {
             // }
             return true;
         }
-        else if(action.equals("addStartListener")){
+        // else if(action.equals("addStartListener")){
 
-            callbackContext = context;
-            return true;
+        //     //callbackContext = context;
+        //     return true;
 
-        }
+        // }
         else if(action.equals("startDecode")){
             int err = decoder.startDecode();
 
             context.success(err);
 
             return true;
+        }
+        else if(action.equals("stopDecode")){
+            int err = decoder.stopDecode();
 
+            context.success(err);
+
+            return true;
         } else {
             
             return false;
@@ -115,8 +123,32 @@ public class BarcodeManager extends CordovaPlugin {
 
             };
 
+            // scanListener = new StartListener() {
+
+            //     // Implement the callback method.
+            //     @Override
+            //     public void onScanStarted() {
+            //         // Change the result to the current received result.
+            //         try{                      
+            //             if(callbackContext != null){
+            //                 PluginResult result = new PluginResult(PluginResult.Status.OK, "");
+            //                 result.setKeepCallback(true);
+            //                 callbackContext.sendPluginResult(result);
+            //             }
+            //         }
+            //         catch(Exception e){
+            //             Log.e(LOGTAG, "Error while trying to read barcode data", e);
+            //         }
+                    
+            //     }
+
+            // };
+
             // Remember to add it, as a listener.
             decoder.addReadListener(listener);
+
+            //decoder.addStartListener(scanListener);
+
 
         } catch (DecodeException e) {
             Log.e(LOGTAG, "Error while trying to bind a listener to BarcodeManager", e);
@@ -134,6 +166,8 @@ public class BarcodeManager extends CordovaPlugin {
             try {
                 // Unregister our listener from it and free resources.
                 decoder.removeReadListener(listener);
+
+                //decoder.removeStartListener(scanListener);
 
                 // Let the garbage collector take care of our reference.
                 decoder = null;
